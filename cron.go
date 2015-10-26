@@ -64,13 +64,16 @@ func main() {
 		data[param[i]] = param[i+1]
 	}
 	//default
+	//请求的url地址
 	if data["-url"] == "" {
 		fmt.Println("Url is empty!")
 		return
 	}
+	//每次请求的间隔秒杀
 	if data["-t"] == "" {
             data["-t"] = "5"
 	}
+	//每次请求多少次
 	if data["-n"] == "" {
             data["-n"] = "1"
 	}
