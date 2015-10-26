@@ -11,6 +11,7 @@ import (
 
 	"os"
 	"time"
+	"strconv"
 )
 
 var i int
@@ -53,6 +54,8 @@ func request_cron(url string) {
 
 }
 
+//type MyFloat64 float64
+
 func main() {
 	param := os.Args
 	data := make(map[string]string)
@@ -67,14 +70,20 @@ func main() {
 		fmt.Println("Url is empty!")
 		return
 	}
+	if data["-t"] == "" {
+            data["-t"] = "5"
+	}
 	//fmt.Println(data["bbb"])
 	i = 0
 	fmt.Println("Start..")
+	second_h,_ := strconv.ParseFloat(data["-t"],64)
+	second_m := second_h*1e9
+	second_num := time.Duration(second_m)
 	for {
 
 		go request_cron(data["-url"])
 
-		time.Sleep(3 * 1e9)
+		time.Sleep(second_num)
 
 	}
 
