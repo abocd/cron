@@ -46,9 +46,7 @@ func request_cron(url string) {
 
 	}
 
-	fmt.Print(string(data))
-
-	fmt.Print("/")
+	fmt.Print(string(data))	
 
 	return
 
@@ -73,6 +71,9 @@ func main() {
 	if data["-t"] == "" {
             data["-t"] = "5"
 	}
+	if data["-n"] == "" {
+            data["-n"] = "1"
+	}
 	//fmt.Println(data["bbb"])
 	i = 0
 	fmt.Println("Start..")
@@ -82,10 +83,13 @@ func main() {
 	second_m := second_h*1e9
 //转化为符合time.Sleep的参数
 	second_num := time.Duration(second_m)
+        n,_ := strconv.ParseInt(data["-n"],10,64)
+	var i int64
 	for {
-
-		go request_cron(data["-url"])
-
+		for i=0;i<n;i++{
+     		    go request_cron(data["-url"])
+		}
+		fmt.Println("Next..")
 		time.Sleep(second_num)
 
 	}
