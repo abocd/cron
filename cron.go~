@@ -2,36 +2,26 @@
 
 package main
 
-
-
 import (
-
 	"fmt"
 
 	"io/ioutil"
 
 	"net/http"
 
-	"time"
 	"os"
-
+	"time"
 )
-
-
 
 var i int
 
-
-
-func request_cron() {
+func request_cron(url string) {
 
 	i++
 
 	fmt.Print(i)
 
 	fmt.Print(":")
-
-	url := "http://yuexing.eihoo.cn?mod=cron"
 
 	resp, err1 := http.Get(url)
 
@@ -63,38 +53,29 @@ func request_cron() {
 
 }
 
-
-
 func main() {
 	param := os.Args
-	data := make( map[string]string)
-	len := len(param)-1
+	data := make(map[string]string)
+	len := len(param) - 1
 	// fmt.Println(len)
-	for i=1;i<len;i+=2{
+	for i = 1; i < len; i += 2 {
 		// fmt.Println(param[i])
 		data[param[i]] = param[i+1]
 	}
-	//default	
-	if data["-t"]<="0" {
-		data["-t"] = "5"
+	//default
+	if data["-url"] == "" {
+		fmt.Println("Url is empty!")
+		return
 	}
-	if data["-url"] == ""{
-		fmt.Println("Url is empty!");
-		return;
-	}
-	fmt.Println(data["bbb"])
-	i = 0	
+	//fmt.Println(data["bbb"])
+	i = 0
 	fmt.Println("Start..")
 	for {
 
-		go request_cron()
+		go request_cron(data["-url"])
 
-		time.Sleep(4 * 1e9)
+		time.Sleep(3 * 1e9)
 
 	}
 
-
-
 }
-
-
