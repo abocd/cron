@@ -13,16 +13,17 @@ import (
 	"time"
 	"strconv"
 )
-
-var i int
+//请求总次数
+var total int
+//是否输出结果
+var result bool
 
 func request_cron(url string) {
 
-	i++
+	total++
 
-	fmt.Print(i)
 
-	fmt.Print(":")
+	fmt.Println("Request num :",total)
 
 	resp, err1 := http.Get(url)
 
@@ -45,9 +46,10 @@ func request_cron(url string) {
 		return
 
 	}
-
+	
+	if result {
 	fmt.Print(string(data))	
-
+	}
 	return
 
 }
@@ -59,7 +61,7 @@ func main() {
 	data := make(map[string]string)
 	len := len(param) - 1
 	// fmt.Println(len)
-	for i = 1; i < len; i += 2 {
+	for i := 1; i < len; i += 2 {
 		// fmt.Println(param[i])
 		data[param[i]] = param[i+1]
 	}
@@ -77,8 +79,17 @@ func main() {
 	if data["-n"] == "" {
             data["-n"] = "1"
 	}
+	//是否输出结果
+	if data["-r"] == "" {
+            data["-r"] = "true"
+	}
+	if data["-r"]== "true"{
+		result = true
+	} else {
+		result = false
+	}
 	//fmt.Println(data["bbb"])
-	i = 0
+	total = 0
 	fmt.Println("Start..")
 //转化为float64位
 	second_h,_ := strconv.ParseFloat(data["-t"],64)
@@ -89,10 +100,11 @@ func main() {
         n,_ := strconv.ParseInt(data["-n"],10,64)
 	var i int64
 	for {
+		fmt.Println("Next..")		
 		for i=0;i<n;i++{
      		    go request_cron(data["-url"])
 		}
-		fmt.Println("Next..")
+		
 		time.Sleep(second_num)
 
 	}
